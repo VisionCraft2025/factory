@@ -2,10 +2,15 @@
 #include <unistd.h>
 
 // 핀 번호 (WiringPi 번호)
-#define IN1 14
-#define IN2 15
-#define IN3 16
-#define IN4 17
+// #define IN1 14
+// #define IN2 15
+// #define IN3 16
+// #define IN4 17
+
+#define IN1 5
+#define IN2 6
+#define IN3 13
+#define IN4 19
 
 #define STEPS 2048
 #define DELAY_MS 5 // 속도 조절

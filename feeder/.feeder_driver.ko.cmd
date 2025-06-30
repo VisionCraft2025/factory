@@ -1,0 +1,1 @@
+savedcmd_/home/veda/factory/feeder/feeder_driver.ko := aarch64-linux-gnu-ld -r -EL  -maarch64elf -z noexecstack --no-warn-rwx-segments --build-id=sha1  -T arch/arm64/module.lds -o /home/veda/factory/feeder/feeder_driver.ko /home/veda/factory/feeder/feeder_driver.o /home/veda/factory/feeder/feeder_driver.mod.o /home/veda/factory/feeder/.module-common.o
