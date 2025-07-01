@@ -57,6 +57,7 @@ static int motor_func(void *data) {
             step += direction;
             if (step < 0) step += 8;
             usleep_range(MOTOR_DELAY_US, MOTOR_DELAY_US + 200);
+
         } else {
             msleep(50); //대기ㅣ
         }
