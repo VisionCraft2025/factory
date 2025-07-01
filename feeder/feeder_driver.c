@@ -13,6 +13,7 @@ MODULE_DESCRIPTION("Stepper Motor Driver for Feeder");
 #define DEVICE_NAME "feeder" //디바이스명
 #define BUF_LEN 16 //명령어버퍼
 #define NUM_PINS 4 //스텝모터 핀 4개임
+#define MOTOR_DELAY_US 700 // 모터 속도
 
 //static 붙여야 다른 모듈이랑 이름 같아도 충돌 안남
 
@@ -55,7 +56,7 @@ static int motor_func(void *data) {
                 gpio_set_value(pins[i], step_sequence[idx][i]);
             step += direction;
             if (step < 0) step += 8;
-            msleep(5);
+            usleep_range(MOTOR_DELAY_US, MOTOR_DELAY_US + 200);
         } else {
             msleep(50); //대기ㅣ
         }

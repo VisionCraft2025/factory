@@ -12,11 +12,7 @@ sudo apt update
 sudo apt install -y build-essential raspberrypi-kernel-headers wiringpi
 ```
 
-### 2. 프로젝트 빌드
-```bash
-make
-```
-### 3. 커널 모듈 로딩 및 실행
+### 2. 커널 모듈 로딩 및 실행
 ```bash
 sudo ./setup_feeder.sh
 ```
