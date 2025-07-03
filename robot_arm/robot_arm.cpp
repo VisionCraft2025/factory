@@ -6,6 +6,7 @@
 
 using namespace std;
 
+
 // 서보 핀 번호 (wiringPi 기준)
 const int SERVO1 = 3;  // GPIO 22, 디지털핀 3 - Base
 const int SERVO2 = 5;  // GPIO 24, 디지털핀 5 - Shoulder  
