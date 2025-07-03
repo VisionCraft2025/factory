@@ -52,6 +52,7 @@ clean:
 run: all
 	sudo ./setup_robot_arm.sh
 
+
 # 개발용 타겟들
 test: $(TEST_TARGET)
 	@echo "테스트 프로그램 빌드 완료: ./$(TEST_TARGET)"
