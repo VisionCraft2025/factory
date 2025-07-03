@@ -7,6 +7,7 @@ MAJOR_NUM=
 
 echo "=== Robot Arm Setup Script ==="
 
+
 echo "<기존 모듈 제거>"
 sudo rmmod ${DRIVER_NAME} 2>/dev/null
 
