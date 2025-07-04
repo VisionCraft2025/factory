@@ -13,7 +13,7 @@ int main() {
     }
 
     std::cout << "=== Feeder Control ===\n";
-    std::cout << "명령을 입력하세요 (on / reverse / off / exit):\n";
+    std::cout << "명령을 입력하세요 (on / reverse / off / error / normal / exit):\n";
 
     std::string cmd;
     while (true) {
@@ -24,11 +24,11 @@ int main() {
             break;
         }
 
-        if (cmd == "on" || cmd == "off" || cmd == "reverse") {
+        if (cmd == "on" || cmd == "off" || cmd == "reverse" || cmd == "error" || cmd == "normal") {
             feeder << cmd << std::endl;
             feeder.flush();
         } else {
-            std::cout << "잘못된 명령입니다. (on / reverse / off / exit)\n";
+            std::cout << "잘못된 명령입니다. (on / off / reverse / error / normal / exit)\n";
         }
     }
 

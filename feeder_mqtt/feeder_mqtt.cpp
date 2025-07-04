@@ -16,7 +16,7 @@ int main(int argc, char *argv[]) {
 
     QObject::connect(&client, &QMqttClient::connected, [&]() {
         qInfo("MQTT connected");
-        client.subscribe(QMqttTopicFilter("feeder/cmd"));  // "feeder/cmd" 토픽, 나중에 바꿔도 됨. 자동생성임
+        client.subscribe(QMqttTopicFilter("feeder/cmd"));  // "feeder/cmd" 토픽
     });
 
     QObject::connect(&client, &QMqttClient::messageReceived,
@@ -33,7 +33,7 @@ int main(int argc, char *argv[]) {
             }
 
             QTextStream out(&feeder);
-            if (cmd == "on" || cmd == "off" || cmd == "reverse") {
+            if (cmd == "on" || cmd == "off" || cmd == "reverse" || cmd == "error" || cmd == "normal") {
                 out << cmd << "\n";
             } else {
                 qWarning("Invalid command received");

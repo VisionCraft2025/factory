@@ -37,6 +37,10 @@ make로 유저 프로그램 및 MQTT 프로그램, 커널 모듈을 자동 빌�
 
 > off       # 회전 정지
 
+> error     # 에러모드, 30초간 정상 작동 후 점차 느려짐.(멈추진 않음)
+
+> normal    # 정상속도 복귀
+
 > exit      # 종료
 
 #### MQTT 모드
@@ -48,4 +52,6 @@ make로 유저 프로그램 및 MQTT 프로그램, 커널 모듈을 자동 빌�
 mosquitto_pub -h mqtt.kwon.pics -p 1883 -t feeder/cmd -m "on"
 mosquitto_pub -h mqtt.kwon.pics -p 1883 -t feeder/cmd -m "reverse"
 mosquitto_pub -h mqtt.kwon.pics -p 1883 -t feeder/cmd -m "off"
+mosquitto_pub -h mqtt.kwon.pics -p 1883 -t feeder/cmd -m "error"
+mosquitto_pub -h mqtt.kwon.pics -p 1883 -t feeder/cmd -m "normal"
 ```
