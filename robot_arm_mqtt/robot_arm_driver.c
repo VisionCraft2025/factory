@@ -154,6 +154,14 @@ static int robot_motion_thread(void *data)
                 move_servo_smooth(2, 200, 1);
                 move_servo_smooth(1, 90, 1);
                 move_servo_smooth(2, 160, 1);
+
+
+                // 박스 엎기
+                msleep(1000);                  // 잠깐 대기 후
+                move_servo_smooth(3, 160, 1);  // 엔드모터로 박스를 기울여 내용물 버림
+                msleep(1000);                  // 다 쏟을 때까지 기다림
+                move_servo_smooth(3, 90, 1);   // 다시 원위치로 복귀
+
                 msleep(SEQUENCE_DELAY); 
                 current_sequence = 3;
                 break;
@@ -213,18 +221,20 @@ static ssize_t robot_arm_write(struct file *file, const char __user *buf, size_t
     else if (strncmp(command_buffer, "init", 4) == 0)
     {
         // 모든 서보모터를 중앙으로 돌려서 초기화시키기
-        move_servo_smooth(3, 90, 1);
-        move_servo_smooth(2, 90, 1);
+        move_servo_smooth(3, 220, 1); //엔드
+        move_servo_smooth(2, 220, 1);
         move_servo_smooth(1, 90, 1);
-        move_servo_smooth(0, 0, 1);
+        move_servo_smooth(0, 90, 1); // 1
     }
     else if (sscanf(command_buffer, "servo%d %d", &servo_id, &angle) == 2)
     {
         // 사용자가 수동으로 조정하고 싶을 때를 위해 일단 구현함
         // "servo0 90" 이런식인데, 이렇게 하면 하단모터가 90도 돌아감
 
-        if (servo_id >= 0 && servo_id < NUM_SERVOS && angle >= 0 && angle <= 250)
-            servos[servo_id].current_angle = angle;
+        if (servo_id >= 0 && servo_id < NUM_SERVOS && angle >= 0 && angle <= 250) {
+        servos[servo_id].current_angle = angle;
+        set_servo_pwm(servo_id, angle);  // 직접 PWM 신호 보내기
+    }
     }
     else
     {
@@ -297,10 +307,10 @@ static int __init robot_arm_init(void)
         gpio_direction_output(servo_pins[i], 0);
 
         // 서보모터들 상태 초기화 -> 모두 90도 중앙 위치로 초기화
-        move_servo_smooth(3, 90, 1);
-        move_servo_smooth(2, 90, 1);
+        move_servo_smooth(3, 220, 1); // 엔드 모터
+        move_servo_smooth(2, 220, 1);
         move_servo_smooth(1, 90, 1);
-        move_servo_smooth(0, 0, 1);
+        move_servo_smooth(0, 90, 1);
         servos[i].moving = false;
     }
 
