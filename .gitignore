@@ -8,5 +8,6 @@
 *.symvers
 *.mod.c
 motor_control
-mqtt_test/build/*
+/mqtt_test
+mqtt_control/build/*
 *.crt
