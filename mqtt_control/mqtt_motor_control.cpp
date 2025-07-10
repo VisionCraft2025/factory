@@ -7,6 +7,7 @@
 #include <unistd.h>
 #include <errno.h>
 #include <signal.h>
+#include <algorithm>  // std::transform 사용
 
 extern "C" {
     #include "MQTTClient.h"
@@ -114,66 +115,24 @@ public:
     }
 
     // MQTT 메시지 파싱 및 모터 제어
-    void process_motor_command(const std::string& message) {
-        std::cout << COLOR_CYAN << "받은 명령: " << message << COLOR_RESET << std::endl;
+    void process_motor_command(const std::string& topic, const std::string& message) {
+        std::cout << COLOR_CYAN << "토픽: " << topic << ", 메시지: " << message << COLOR_RESET << std::endl;
 
-        // JSON 형태가 아닌 간단한 텍스트 명령어 파싱
-        // 예: "a 50", "-a 30", "b 70", "stop" 등
+        // 페이로드 처리 (대소문자 구분 없음)
+        std::string payload = message;
+        // 소문자로 변환
+        std::transform(payload.begin(), payload.end(), payload.begin(), ::tolower);
         
-        std::string command;
-        int value = 0;
-        
-        // "stop" 명령 처리
-        if (message == "stop" || message == "STOP") {
+        if (payload == "on") {
+            // 모터A 정방향 99%로 설정
+            send_motor_command('A', 1, 99);
+            std::cout << COLOR_GREEN << "모터 켜짐 - 모터A 정방향 속도: 99%" << COLOR_RESET << std::endl;
+        } else if (payload == "off") {
+            // 모터 정지
             send_motor_command('S', 0, 0);
-            return;
-        }
-        
-        // 공백으로 분리된 명령어 파싱
-        size_t space_pos = message.find(' ');
-        if (space_pos != std::string::npos) {
-            command = message.substr(0, space_pos);
-            try {
-                value = std::stoi(message.substr(space_pos + 1));
-            } catch (const std::exception& e) {
-                std::cerr << COLOR_RED << "잘못된 속도 값: " << message << COLOR_RESET << std::endl;
-                return;
-            }
-            
-            // 속도 유효성 검사
-            if (value < 0 || value > 100) {
-                std::cerr << COLOR_RED << "속도는 0-100 범위여야 합니다: " << value << COLOR_RESET << std::endl;
-                return;
-            }
-            
-            // 명령어 처리
-            if (command == "a" || command == "A") {
-                send_motor_command('A', 1, value);
-            } else if (command == "-a" || command == "-A") {
-                send_motor_command('A', -1, value);
-            } else if (command == "b" || command == "B") {
-                send_motor_command('B', 1, value);
-            } else if (command == "-b" || command == "-B") {
-                send_motor_command('B', -1, value);
-            } else {
-                std::cerr << COLOR_RED << "알 수 없는 명령어: " << command << COLOR_RESET << std::endl;
-            }
+            std::cout << COLOR_GREEN << "모터 꺼짐 - 모터 정지" << COLOR_RESET << std::endl;
         } else {
-            // 단일 숫자 명령 (모터A 제어)
-            try {
-                int num_value = std::stoi(message);
-                if (num_value == 0) {
-                    send_motor_command('S', 0, 0);
-                } else if (num_value > 0 && num_value <= 100) {
-                    send_motor_command('A', 1, num_value);
-                } else if (num_value < 0 && num_value >= -100) {
-                    send_motor_command('A', -1, -num_value);
-                } else {
-                    std::cerr << COLOR_RED << "유효하지 않은 속도: " << num_value << COLOR_RESET << std::endl;
-                }
-            } catch (const std::exception& e) {
-                std::cerr << COLOR_RED << "알 수 없는 명령: " << message << COLOR_RESET << std::endl;
-            }
+            std::cerr << COLOR_RED << "알 수 없는 명령: " << message << " (on 또는 off만 지원)" << COLOR_RESET << std::endl;
         }
     }
 
@@ -181,10 +140,11 @@ public:
     static int message_arrived(void* context, char* topicName, int topicLen, MQTTClient_message* message) {
         MQTTMotorController* controller = static_cast<MQTTMotorController*>(context);
         
+        std::string topic(topicName);
         std::string payload(static_cast<char*>(message->payload), message->payloadlen);
-        std::cout << COLOR_BLUE << "토픽 '" << topicName << "'에서 메시지 도착: " << payload << COLOR_RESET << std::endl;
+        std::cout << COLOR_BLUE << "토픽 '" << topic << "'에서 메시지 도착: " << payload << COLOR_RESET << std::endl;
         
-        controller->process_motor_command(payload);
+        controller->process_motor_command(topic, payload);
         
         MQTTClient_freeMessage(&message);
         MQTTClient_free(topicName);
@@ -231,13 +191,12 @@ public:
 
         std::cout << COLOR_GREEN << "✓ MQTT 브로커에 연결되었습니다!" << COLOR_RESET << std::endl;
 
-        // 토픽 구독
+        // 토픽 구독 (기본 토픽만 구독)
         rc = MQTTClient_subscribe(client, subscribe_topic.c_str(), 1);
         if (rc != MQTTCLIENT_SUCCESS) {
             std::cerr << COLOR_RED << "토픽 구독 실패: " << subscribe_topic << COLOR_RESET << std::endl;
             return false;
         }
-
         std::cout << COLOR_GREEN << "✓ 토픽 구독: " << subscribe_topic << COLOR_RESET << std::endl;
         return true;
     }
@@ -246,13 +205,9 @@ public:
         std::cout << COLOR_BOLD << "\n=== MQTT 모터 제어 시스템 시작 ===" << COLOR_RESET << std::endl;
         std::cout << COLOR_CYAN << "구독 토픽: " << subscribe_topic << COLOR_RESET << std::endl;
         std::cout << COLOR_YELLOW << "Ctrl+C로 안전하게 종료할 수 있습니다." << COLOR_RESET << std::endl;
-        std::cout << COLOR_CYAN << "명령어 예시:" << COLOR_RESET << std::endl;
-        std::cout << "  a 50      - 모터A 정방향 50%" << std::endl;
-        std::cout << "  -a 30     - 모터A 역방향 30%" << std::endl;
-        std::cout << "  b 70      - 모터B 정방향 70%" << std::endl;
-        std::cout << "  stop      - 모든 모터 정지" << std::endl;
-        std::cout << "  50        - 모터A 정방향 50%" << std::endl;
-        std::cout << "  -25       - 모터A 역방향 25%" << std::endl;
+        std::cout << COLOR_CYAN << "페이로드 명령어:" << COLOR_RESET << std::endl;
+        std::cout << "  on       - 모터A 정방향 99% (켜짐)" << std::endl;
+        std::cout << "  off      - 모터 정지 (꺼짐)" << std::endl;
 
         while (running) {
             sleep(1);  // 메시지 처리를 위해 대기
@@ -287,11 +242,14 @@ void signal_handler(int sig) {
 }
 
 int main(int argc, char* argv[]) {
-    // 명령행 인자 확인
-    if (argc != 2) {
-        std::cerr << COLOR_RED << "사용법: " << argv[0] << " <토픽명>" << COLOR_RESET << std::endl;
-        std::cerr << "예시: " << argv[0] << " motor/control" << std::endl;
-        return EXIT_FAILURE;
+    // 명령행 인자 확인 (선택사항 - 기본값 사용)
+    std::string subscribe_topic = "conveyor02/cmd";
+    
+    if (argc == 2) {
+        subscribe_topic = argv[1];
+        std::cout << COLOR_CYAN << "사용자 정의 토픽: " << subscribe_topic << COLOR_RESET << std::endl;
+    } else {
+        std::cout << COLOR_CYAN << "기본 토픽 사용: " << subscribe_topic << COLOR_RESET << std::endl;
     }
 
     // 시그널 핸들러 등록
@@ -303,7 +261,6 @@ int main(int argc, char* argv[]) {
         std::string broker_url = "ssl://mqtt.kwon.pics:8883";
         std::string client_id = "RaspberryPiMotorController";
         std::string ca_cert_path = "../ca.crt";
-        std::string subscribe_topic = argv[1];  // 명령행 인자에서 토픽명 가져오기
 
         // 컨트롤러 생성
         MQTTMotorController controller(broker_url, client_id, ca_cert_path, subscribe_topic);
