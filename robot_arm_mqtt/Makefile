@@ -24,13 +24,13 @@ KDIR := /lib/modules/$(shell uname -r)/build
 PWD := $(shell pwd)
 DRIVER_OBJ = robot_arm_driver.ko
 
-# MQTT 헤더 경로 지정 (Robot Arm 경로)
-MQTT_BASE_DIR = $(HOME)/cv_practice/project/pproject/lab/robot_arm_pracice/robot_arm_mqtt/tls_mqtt
-QT_INCLUDE_DIR = $(MQTT_BASE_DIR)/qt6_local/usr/include/aarch64-linux-gnu/qt6
-QT_LIBDIR = $(MQTT_BASE_DIR)/qt6_local/usr/lib/aarch64-linux-gnu
+# Qt6 MQTT 라이브러리 경로 (로컬 빌드)
+QT_MQTT_DIR = $(HOME)/dev/cpp_libs/qtmqtt/install/usr
+QT_INCLUDE_DIR = $(QT_MQTT_DIR)/include/aarch64-linux-gnu/qt6
+QT_LIBDIR = $(QT_MQTT_DIR)/lib/aarch64-linux-gnu
 
 # 환경변수 설정
-export PKG_CONFIG_PATH := $(MQTT_BASE_DIR)/qt6_local/usr/lib/aarch64-linux-gnu/pkgconfig:$(PKG_CONFIG_PATH)
+export PKG_CONFIG_PATH := $(QT_LIBDIR)/pkgconfig:$(PKG_CONFIG_PATH)
 export LD_LIBRARY_PATH := $(QT_LIBDIR):$(LD_LIBRARY_PATH)
 
 QT_FLAGS = -I$(QT_INCLUDE_DIR) -L$(QT_LIBDIR) `pkg-config --cflags --libs Qt6Mqtt Qt6Core`

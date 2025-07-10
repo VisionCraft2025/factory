@@ -1,0 +1,1 @@
+savedcmd_/home/veda/factory/robot_arm_mqtt/robot_arm_driver.mod := printf '%s\n'   robot_arm_driver.o | awk '!x[$$0]++ { print("/home/veda/factory/robot_arm_mqtt/"$$0) }' > /home/veda/factory/robot_arm_mqtt/robot_arm_driver.mod
