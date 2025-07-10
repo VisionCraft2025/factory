@@ -138,26 +138,6 @@ conveyor_mqtt/
 └── README.md           # 이 파일
 ```
 
-### 주요 파일 설명
-
-#### `conveyor_driver.c`
-- 리눅스 커널 모듈
-- GPIO 직접 제어 (스테퍼/서보 모터)
-- Character Device 인터페이스 (/dev/conveyor_mqtt)
-- 자동 판 감지 및 서보 제어
-- 에러 모드 시뮬레이션
-
-#### `conveyor_mqtt.cpp`
-- Qt6 기반 MQTT 클라이언트
-- 브로커: mqtt.kwon.pics:1883
-- 토픽: conveyor/cmd
-- 실시간 원격 제어
-
-#### `conveyor_user.cpp`
-- C++ 기반 로컬 제어 프로그램
-- 대화형 사용자 인터페이스
-- 직접 디바이스 파일 조작
-
 ## ⚙️ 기능 설명
 
 ### 1. 자동 컨베이어 제어
