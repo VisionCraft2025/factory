@@ -1,1 +1,0 @@
-obj-m := feeder_driver.o
