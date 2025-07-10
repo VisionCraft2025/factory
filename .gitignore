@@ -6,4 +6,7 @@
 *.mod
 *.order
 *.symvers
+*.mod.c
 motor_control
+mqtt_test/build/*
+*.crt
