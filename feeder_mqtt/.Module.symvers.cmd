@@ -1,0 +1,1 @@
+savedcmd_/home/veda/factory/feeder_mqtt/Module.symvers :=  scripts/mod/modpost -M -m -a      -o /home/veda/factory/feeder_mqtt/Module.symvers -T /home/veda/factory/feeder_mqtt/modules.order -i Module.symvers -e 

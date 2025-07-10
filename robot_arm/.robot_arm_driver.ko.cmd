@@ -1,0 +1,1 @@
+savedcmd_/home/veda/factory/robot_arm/robot_arm_driver.ko := aarch64-linux-gnu-ld -r -EL  -maarch64elf -z noexecstack --no-warn-rwx-segments --build-id=sha1  -T arch/arm64/module.lds -o /home/veda/factory/robot_arm/robot_arm_driver.ko /home/veda/factory/robot_arm/robot_arm_driver.o /home/veda/factory/robot_arm/robot_arm_driver.mod.o /home/veda/factory/robot_arm/.module-common.o

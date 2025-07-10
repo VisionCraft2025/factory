@@ -1,0 +1,1 @@
+savedcmd_/home/veda/factory/robot_arm/Module.symvers :=  scripts/mod/modpost -M -m -a      -o /home/veda/factory/robot_arm/Module.symvers -T /home/veda/factory/robot_arm/modules.order -i Module.symvers -e 

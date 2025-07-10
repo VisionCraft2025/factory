@@ -324,6 +324,7 @@ static int __init robot_arm_init(void)
         return PTR_ERR(motion_thread);
     }
 
+    printk(KERN_INFO "Robot Arm driver loaded successfully, Major: %d\n", major_num);
     return 0;
 }
 
