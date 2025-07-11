@@ -198,6 +198,9 @@ static int robot_motion_thread(void *data)
             msleep(500);
 
 
+            
+
+
             // switch (current_sequence)
             // {
             // case 0:                      
@@ -276,12 +279,12 @@ static ssize_t robot_arm_write(struct file *file, const char __user *buf, size_t
     command_buffer[len] = '\0';
 
     // 명령어 처리
-    if (strncmp(command_buffer, "auto_on", 7) == 0)
+    if (strncmp(command_buffer, "on", 2) == 0)
     {
         auto_mode = true;
         current_sequence = 0;
     }
-    else if (strncmp(command_buffer, "auto_off", 8) == 0)
+    else if (strncmp(command_buffer, "off", 3) == 0)
     {
         auto_mode = false;
           // 모든 서보모터를 중앙으로 돌려서 초기화시키기 -> 지금은 중앙을 90도로 설정함

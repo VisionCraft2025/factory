@@ -69,8 +69,8 @@ public:
     {
         cout << endl;
         cout << "***** Robot Arm Control Commands *****" << endl;
-        cout << "auto_on     - 자동 모드 시작 (미리 정의된 동작 패턴 실행)" << endl;
-        cout << "auto_off    - 자동 모드 중지" << endl;
+        cout << "on     - 자동 모드 시작 (미리 정의된 동작 패턴 실행)" << endl;
+        cout << "off    - 자동 모드 중지" << endl;
         cout << "init        - 모든 서보를 중앙 위치로 이동하여 초기화" << endl;
         cout << "servo[0-3] [angle] - 개별 서보모터 제어 (예: servo0 45)" << endl;
         cout << "  servo0: 하단 모터 (0-180도) - 로봇 팔을 좌우로 회전" << endl;
@@ -109,7 +109,7 @@ public:
             if (input == "exit")
             {
                 cout << "프로그램을 종료합니다..." << endl;
-                sendCommand("auto_off"); // 종료하기 전에 자동모드 끄기
+                sendCommand("off"); // 종료하기 전에 자동모드 끄기
                 break;
             }
             else if (input == "help")
@@ -125,12 +125,12 @@ public:
                 cout << "로봇 팔 위치를 초기화합니다..." << endl;
                 sendCommand(input);
             }
-            else if (input == "auto_on")
+            else if (input == "on")
             {
                 cout << "자동 모드를 실행합니다..." << endl;
                 sendCommand(input);
             }
-            else if (input == "auto_off")
+            else if (input == "off")
             {
                 cout << "자동 모드를 중지합니다..." << endl;
                 sendCommand(input);

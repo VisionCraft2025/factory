@@ -33,15 +33,15 @@ int main(int argc, char *argv[]) {
             QTextStream out(&robotArm);
             
             // 기본 명령어들
-            if (cmd == "auto_on" || cmd == "auto_off" || cmd == "init") {
+            if (cmd == "on" || cmd == "off" || cmd == "init") {
                 out << cmd << "\n";
             }
             // 별칭 명령어들
             else if (cmd == "pickup" || cmd == "start") {
-                out << "auto_on\n";
+                out << "on\n";
             }
             else if (cmd == "stop" || cmd == "halt") {
-                out << "auto_off\n";
+                out << "off\n";
             }
             // 베이스 제어 명령어들
             else if (cmd == "base_left") {
