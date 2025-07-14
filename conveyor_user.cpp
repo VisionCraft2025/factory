@@ -56,10 +56,10 @@ class conveyorController{
             sendCommand("off");
             break;
         }
-        if(input == "off"){
+        else if(input == "off"){
             sendCommand("off");
         }
-        if(input == "on"){
+        else if(input == "on"){
             sendCommand("on");
         }
         else if(input == "error_mode"){                

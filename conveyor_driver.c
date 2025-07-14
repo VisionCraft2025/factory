@@ -36,7 +36,6 @@ static bool system_stop = false;           // 시스템 정지 신호
 
 //타이머(에러)
 static int current_speed = 100; //현재속도
-//static int target_speed = 100; //목표 속도
 static struct timer_list speed_timer; //속도 변경용 타이머
 
 //스레드
@@ -87,7 +86,6 @@ static void speed_timer_callback(struct timer_list *t) {
         // 2번 감소 완료했는지 체크
         if (error_step_count >= 2) {
             error_mode = false;
-            //target_speed = current_speed; // 현재 속도로 target_speed 동기화
             printk(KERN_INFO "에러 모드 완료 - 속도 %d로 고정 (2번 감소 완료)\n", current_speed);
             return; // 타이머 완전 종료
         }
@@ -227,7 +225,6 @@ static ssize_t conveyor_write(struct file *file, const char __user *buf, size_t 
         conveyor_running = true;
 
         current_speed = 100;
-        //target_speed = 100;
         printk(KERN_INFO "컨베이어 시작 (첫 번째 판: 340 스텝)\n");
     }
     //컨베이어 종료
@@ -251,7 +248,6 @@ static ssize_t conveyor_write(struct file *file, const char __user *buf, size_t 
 
         // 속도 초기화 (추가!)
         current_speed = 100;
-        //target_speed = 100;
 
         printk(KERN_INFO "에러 모드 시작 - 30초 후 속도 감소\n");
         printk(KERN_INFO "시작 시간: %lu\n", error_start_time);
@@ -275,10 +271,10 @@ static ssize_t conveyor_read(struct file *file, char __user *buf, size_t len, lo
     status_len = snprintf(status, sizeof(status),
         "=== 컨베이어 상태 ===\n"
          "컨베이어: %s\n"
-         "서보 각도: %d도 (목표: %d도)\n"    // ← 목표 각도 추가
+         "서보 각도: %d도 (목표: %d도)\n"   
          "스테퍼 방향: %s\n"
-         "현재 속도: %d\n"       // ← 목표 속도 추가
-         "스레드 상태: %s\n"             // ← 스레드 상태 추가
+         "현재 속도: %d\n"       
+         "스레드 상태: %s\n"             
          "스텝 모드: %s\n"
         "현재 스텝: %d / %d\n"  
         "현재 판: %d\n",

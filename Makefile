@@ -124,7 +124,8 @@ create_device:
 	@echo "Major 번호를 입력하세요:"
 	@read MAJOR && sudo mknod /dev/conveyor_mqtt c $$MAJOR 0
 	@sudo chmod 666 /dev/conveyor_mqtt
-	@ls -la /dev/conveyor_mqtt
+	@ls -la /dev/conveyor_mqtt.
+	
 
 test: install
 	@echo "=== 모듈 테스트 ==="
@@ -135,32 +136,5 @@ test: install
 	sleep 1
 	cat /dev/conveyor_mqtt
 	echo "off" > /dev/conveyor_mqtt
-
-mqtt: mqtt_app
-	@echo "=== MQTT 클라이언트 실행 ==="
-	@echo "환경 변수 설정 중..."
-	export LD_LIBRARY_PATH=$(QT6MQTT_LIB):$$LD_LIBRARY_PATH && ./$(MQTT_APP)
-
-debug:
-	@echo "=== 디버그 정보 ==="
-	@echo "현재 로드된 모듈:"
-	lsmod | grep conveyor
-	@echo "디바이스 파일:"
-	ls -la /dev/conveyor_mqtt 2>/dev/null || echo "디바이스 파일 없음"
-	@echo "/proc/devices에서 conveyor 검색:"
-	cat /proc/devices | grep conveyor || echo "없음"
-	@echo "최근 커널 로그:"
-	dmesg | tail -10
-
-help:
-	@echo "사용 가능한 명령어:"
-	@echo "  make all         - 모든 빌드"
-	@echo "  make install     - 모듈 설치 및 디바이스 파일 생성"
-	@echo "  make uninstall   - 모듈 제거"
-	@echo "  make test        - 설치 후 기본 테스트"
-	@echo "  make mqtt        - MQTT 클라이언트 실행"
-	@echo "  make debug       - 현재 상태 확인"
-	@echo "  make create_device - 수동 디바이스 파일 생성"
-	@echo "  make clean       - 빌드 파일 정리"
 
 .PHONY: all module user_app mqtt_app clean install uninstall test mqtt help debug create_device
