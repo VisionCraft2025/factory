@@ -1,3 +1,14 @@
+# 실행 파일
+motor_control
+feeder
+feeder_user
+feeder_mqtt
+robot_arm_test
+robot_arm_user
+robot_arm_mqtt
+mqtt_motor_control
+
+# 커널 모듈 빌드 파일
 *.cmd
 *.ko
 *.o
@@ -7,7 +18,16 @@
 *.order
 *.symvers
 *.mod.c
-motor_control
-/mqtt_test
-conveyor_02/mqtt_control/build/*
-*.crt
+
+# 로그 파일
+*.log
+*.csv
+*.CSV
+
+# 기타 빌드 결과물
+*_debug
+build/
+
+# 임시 파일
+*~
+.DS_Store
