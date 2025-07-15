@@ -1,0 +1,13 @@
+*.cmd
+*.ko
+*.o
+*.obj
+*.so
+*.mod
+*.order
+*.symvers
+*.mod.c
+motor_control
+/mqtt_test
+conveyor_02/mqtt_control/build/*
+*.crt
