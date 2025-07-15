@@ -22,14 +22,14 @@ int main(int argc, char *argv[]) {
         qDebug() << "클라이언트 ID:" << mqtt_client.clientId();
         
         // 토픽 구독
-        auto subscription = mqtt_client.subscribe(QMqttTopicFilter("conveyor_02/cmd"));
+        auto subscription = mqtt_client.subscribe(QMqttTopicFilter("conveyor_01/cmd"));
         if (subscription) {
-            qDebug() << "conveyor_02/cmd 토픽 구독 요청 전송";
+            qDebug() << "conveyor_01/cmd 토픽 구독 요청 전송";
             
             // 구독 성공 확인
             QObject::connect(subscription, &QMqttSubscription::stateChanged, [](QMqttSubscription::SubscriptionState state) {
                 if (state == QMqttSubscription::Subscribed) {
-                    qDebug() << "conveyor_02/cmd 토픽 구독 완료!";
+                    qDebug() << "conveyor_01/cmd 토픽 구독 완료!";
                 } else if (state == QMqttSubscription::Error) {
                     qDebug() << "토픽 구독 실패!";
                 }
@@ -41,7 +41,7 @@ int main(int argc, char *argv[]) {
         // 테스트 메시지 발행 (자가 테스트)
         QTimer::singleShot(2000, [&]() {
             qDebug() << ">> 테스트 메시지 발행 중...";
-            mqtt_client.publish(QMqttTopicName("conveyor_02/cmd"), "test_message");
+            mqtt_client.publish(QMqttTopicName("conveyor_01/cmd"), "test_message");
         });
     });
 
@@ -124,7 +124,7 @@ int main(int argc, char *argv[]) {
         qDebug() << "MQTT 상태 변경:" << stateStr;
     });
     
-    qDebug() << "MQTT 클라이언트 시작 - conveyor_02/cmd 토픽 대기 중...";
+    qDebug() << "MQTT 클라이언트 시작 - conveyor_01/cmd 토픽 대기 중...";
     qDebug() << "Ctrl+C로 종료하세요.";
     
     return app.exec();
