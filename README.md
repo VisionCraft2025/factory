@@ -233,7 +233,7 @@ mosquitto_pub -h mqtt.kwon.pics -p 8883 --cafile ca.crt -t "conveyor02/cmd" -m "
 - `robot_arm/cmd`: 로봇암 제어
 - `conveyor02/cmd`: L298N 모터 제어
 
-## 🛠️ 문제 해결
+## 문제 해결
 
 ### 권한 오류
 ```bash
@@ -269,7 +269,7 @@ ldd ./conveyor_mqtt
 export LD_LIBRARY_PATH=/home/veda/dev/cpp_libs/qtmqtt/install/usr/lib/aarch64-linux-gnu:$LD_LIBRARY_PATH
 ```
 
-## 💡 사용 팁
+## 사용 팁
 
 ### 시스템 시작 순서
 1. 각 시스템의 커널 모듈 로드
