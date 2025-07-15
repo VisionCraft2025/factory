@@ -9,5 +9,5 @@
 *.mod.c
 motor_control
 /mqtt_test
-mqtt_control/build/*
+conveyor_02/mqtt_control/build/*
 *.crt
