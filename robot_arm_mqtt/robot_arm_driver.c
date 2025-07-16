@@ -149,7 +149,7 @@ static int robot_motion_thread(void *data)
 
 
             // 0. servo3
-            move_servo_smooth(3, 100, 1);
+            move_servo_smooth(3, 0, 1);
 
 
             // 1. servo0
@@ -179,7 +179,7 @@ static int robot_motion_thread(void *data)
             move_servo_smooth(2, 110, 1);
 
             // // 9. servo3 상자 버리기
-            move_servo_smooth(3, 0, 1);
+            move_servo_smooth(3, 220, 1);
 
             //  // 10. 5초 대기
             msleep(5000);   
