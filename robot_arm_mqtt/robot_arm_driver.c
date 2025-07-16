@@ -149,44 +149,45 @@ static int robot_motion_thread(void *data)
 
 
             // 0. servo3
-            move_servo_smooth(3, 220, 1);
+            move_servo_smooth(3, 100, 1);
 
 
             // 1. servo0
             move_servo_smooth(0, 260, 1);
-            //move_servo_smooth(0, 20, 1); //되돌아가기
+            // //move_servo_smooth(0, 20, 1); //되돌아가기
 
-            // 2. servo2
-            move_servo_smooth(2, 260, 1);
+            // // 2. servo2
+            move_servo_smooth(2, 120, 1);
+            move_servo_smooth(2, 30, 1);
 
-            // 3. servo1 
+            // // 3. servo1 
             move_servo_smooth(1, 60, 1); //60도 ㄱㅊ
 
-            // 4. 5초 대기
+            // // 4. 5초 대기
             msleep(5000);
 
-            // 5. servo1 
+            // // 5. servo1 
             move_servo_smooth(1, 120, 1); 
 
-            // 6. servo0
+            // // 6. servo0
             move_servo_smooth(0, 20, 1); //되돌아가기
 
-            // 7. servo1 
+            // // 7. servo1 
             move_servo_smooth(1, 90, 1); //60도 ㄱㅊ
 
-            // 8. servo2
+            // // 8. servo2
             move_servo_smooth(2, 110, 1);
 
-            // 9. servo3 상자 버리기
+            // // 9. servo3 상자 버리기
             move_servo_smooth(3, 0, 1);
 
-             // 10. 5초 대기
+            //  // 10. 5초 대기
             msleep(5000);   
 
-             // 11. servo1 
+            //  // 11. servo1 
             move_servo_smooth(1, 120, 1); 
 
-            // 12. servo2
+            // // 12. servo2
             move_servo_smooth(2, 160, 1);
 
 
@@ -196,66 +197,6 @@ static int robot_motion_thread(void *data)
             }
 
             msleep(500);
-
-
-            
-
-
-            // switch (current_sequence)
-            // {
-            // case 0:                      
-            //     move_servo_smooth(2, 200, 1);
-            //     move_servo_smooth(1, 40, 1); 
-            //     move_servo_smooth(2, 160, 1); 
-            //     move_servo_smooth(1, 90, 1);
-            //     move_servo_smooth(0, 90, 1);
-            //     msleep(SEQUENCE_DELAY);          
-
-            //     current_sequence = 1;         // 다음 단계로
-            //     break;
-
-            // case 1:                         
-            //     move_servo_smooth(1, 50, 1);
-            //     move_servo_smooth(2, 200, 1);
-            //     move_servo_smooth(1, 0, 1);
-            //     move_servo_smooth(2, 250, 1);
-            //     msleep(SEQUENCE_DELAY); 
-            //     current_sequence = 2;
-            //     break;
-
-            // case 2:                  
-            //     move_servo_smooth(3, 90, 1);
-            //     move_servo_smooth(1, 30, 1);
-            //     move_servo_smooth(2, 200, 1);
-            //     move_servo_smooth(1, 90, 1);
-            //     move_servo_smooth(2, 160, 1);
-
-
-            //     // 박스 엎기
-            //     msleep(1000);                  // 잠깐 대기 후
-            //     move_servo_smooth(3, 160, 1);  // 엔드모터로 박스를 기울여 내용물 버림
-            //     msleep(1000);                  // 다 쏟을 때까지 기다림
-            //     move_servo_smooth(3, 90, 1);   // 다시 원위치로 복귀
-
-            //     msleep(SEQUENCE_DELAY); 
-            //     current_sequence = 3;
-            //     break;
-
-            // case 3:                    
-            //     move_servo_smooth(0, 250, 1);
-            //     move_servo_smooth(1, 60, 1);
-            //     move_servo_smooth(2, 200, 1);
-            //     move_servo_smooth(1, 30, 1);
-            //     move_servo_smooth(2, 210, 1);
-            //     move_servo_smooth(1, 0, 1);
-            //     move_servo_smooth(2, 250, 1);
-            //     msleep(1000);
-
-            //     move_servo_smooth(3, 90, 1);
-            //     msleep(SEQUENCE_DELAY); 
-            //     current_sequence = 0;
-            //     break;
-            // }
         }
         else
             msleep(100); // 자동 모드가 꺼져있으면 100ms마다 확인
