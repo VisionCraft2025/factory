@@ -235,10 +235,10 @@ mosquitto_pub -h mqtt.kwon.pics -p 8883 --cafile ca.crt -t "conveyor02/cmd" -m "
 - **인증**: TLS 인증서 필요 (일부 시스템)
 
 ### 토픽 구조
-- `conveyor_01/cmd`: 컨베이어 제어
-- `feeder/cmd`: 피더 제어
-- `robot_arm/cmd`: 로봇암 제어
-- `conveyor02/cmd`: L298N 모터 제어
+- `factory/conveyor_01/cmd`: 컨베이어 제어
+- `factory/feeder/cmd`: 피더 제어
+- `factory/robot_arm/cmd`: 로봇암 제어
+- `factory/conveyor02/cmd`: L298N 모터 제어
 
 ## 문제 해결
 
@@ -275,6 +275,50 @@ ldd ./conveyor_mqtt
 # 환경 변수 설정
 export LD_LIBRARY_PATH=/home/veda/dev/cpp_libs/qtmqtt/install/usr/lib/aarch64-linux-gnu:$LD_LIBRARY_PATH
 ```
+## 암호화 구현
+
+이 프로젝트는 다음과 같은 암호화 방식을 구현하여 보안성을 확보합니다:
+
+### 1. 상호 TLS(mTLS) 인증
+
+- **양방향 인증**: 클라이언트와 서버 모두 인증서로 서로의 신원을 확인합니다.
+- **인증서 기반 신원 확인**: X.509 인증서를 통해 연결 주체의 신원을 검증합니다.
+- **인증서 해지 방지**: 인증서 해지 여부를 확인하여 유효한 인증서만 허용합니다.
+
+### 2. TLS 프로토콜 사용
+
+- **TLS 1.2/1.3**: 최신 TLS 프로토콜을 사용하여 통신 보안을 강화합니다.
+- **안전한 암호 스위트**: 최신 암호화 알고리즘(AES-256-GCM, ECDHE 등)을 사용합니다.
+- **포워드 시크리시(Forward Secrecy)**: 임시 키를 사용하여 과거 통신이 노출되지 않도록 보호합니다.(DH)
+
+### 3. 구현 방식
+
+```cpp
+// TLS 설정 초기화
+mosquitto_tls_set(
+    client,                // MQTT 클라이언트 인스턴스
+    "./certs/ca.crt",     // CA 인증서 경로
+    NULL,                 // CA 디렉토리 경로 (NULL=사용하지 않음)
+    "./certs/conveyor_02.crt", // 클라이언트 인증서
+    "./certs/conveyor_02.key", // 클라이언트 개인키
+    NULL                  // 개인키 비밀번호 (NULL=비밀번호 없음)
+);
+
+// TLS 보안 옵션 설정
+mosquitto_tls_opts_set(
+    client,                // MQTT 클라이언트 인스턴스
+    1,                    // 서버 인증서 검증 (1=활성화)
+    "TLSv1.2",            // TLS 버전 지정
+    NULL                  // 암호 스위트 (기본값 사용)
+);
+```
+
+### 4. 보안 핵심 요소
+
+- **인증서 기반 디바이스 식별**: 각 디바이스는 고유한 인증서를 통해 식별되어 불법 접근을 방지합니다.
+- **인증서 관리**: 인증서의 유효기간 관리 및 해지된 인증서 차단을 통해 보안성을 유지합니다.
+- **전송 데이터 암호화**: 모든 MQTT 통신은 TLS를 통해 암호화되어 도청을 방지합니다.
+
 
 ## 사용 팁
 
