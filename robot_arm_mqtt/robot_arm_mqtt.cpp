@@ -35,13 +35,25 @@ int main(int argc, char *argv[]) {
             // 기본 명령어들
             if (cmd == "on" || cmd == "off" || cmd == "init") {
                 out << cmd << "\n";
+                qInfo() << "Sent command:" << cmd;
+            }
+            // 새로운 명령어들 - come/go
+            else if (cmd == "come") {
+                out << "come\n";
+                qInfo() << "Sent COME command";
+            }
+            else if (cmd == "go") {
+                out << "go\n";
+                qInfo() << "Sent GO command";
             }
             // 별칭 명령어들
-            else if (cmd == "pickup" || cmd == "start") {
+            else if (cmd == "pickup" || cmd == "start" || cmd == "ready") {
                 out << "on\n";
+                qInfo() << "Sent ON command (ready mode)";
             }
             else if (cmd == "stop" || cmd == "halt") {
                 out << "off\n";
+                qInfo() << "Sent OFF command";
             }
             // 베이스 제어 명령어들
             else if (cmd == "base_left") {
