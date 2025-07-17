@@ -125,6 +125,10 @@ mosquitto_pub -h mqtt.kwon.pics -p 1883 -t "feeder/cmd" -m "error"
 
 # 정상 속도 복귀
 mosquitto_pub -h mqtt.kwon.pics -p 1883 -t "feeder/cmd" -m "normal"
+
+# 암호화 메세지 보내기
+mosquitto_pub -h mqtt.kwon.pics -p 8883 --cafile $HOME/certs/ca.crt --cert $HOME/certs/feeder_01.crt --key $HOME/certs/feeder_01.key -t "feeder_01/cmd" -m "on"
+
 ```
 
 ### 3. 로봇암 시스템 (robot_arm_mqtt)

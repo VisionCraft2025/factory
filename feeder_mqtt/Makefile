@@ -10,6 +10,10 @@ SRC2 = feeder_user.cpp
 TARGET3 = feeder_mqtt 
 SRC3 = feeder_mqtt.cpp
 
+#mqtt with TLS
+TARGET4 = feeder_mqtt_tls
+SRC4 = feeder_mqtt_tls.cpp
+
 CXX = g++
 CXXFLAGS = -Wall
 LIBS = -lwiringPi
@@ -36,7 +40,7 @@ export LD_LIBRARY_PATH := $(QT_LIBDIR):$(LD_LIBRARY_PATH)
 QT_FLAGS = -I$(QT_INCLUDE_DIR) -L$(QT_LIBDIR) `pkg-config --cflags --libs Qt6Mqtt Qt6Core`
 
 
-all: $(TARGET1) $(TARGET2) $(TARGET3) $(DRIVER_OBJ)
+all: $(TARGET1) $(TARGET2) $(TARGET3) $(TARGET4) $(DRIVER_OBJ)
 
 $(TARGET1): $(SRC1)
 	$(CXX) $(CXXFLAGS) -o $(TARGET1) $(SRC1) $(LIBS)
@@ -51,6 +55,9 @@ $(DRIVER_OBJ):
 $(TARGET3): $(SRC3)
 	$(CXX) $(CXXFLAGS) -o $(TARGET3) $(SRC3) $(QT_FLAGS)
 
+$(TARGET4): $(SRC4)
+	$(CXX) $(CXXFLAGS) -o $(TARGET4) $(SRC4) -lmosquitto -lssl -lcrypto
+
 clean:
-	rm -f $(TARGET1) $(TARGET2) $(TARGET3)
+	rm -f $(TARGET1) $(TARGET2) $(TARGET3) $(TARGET4)
 	$(MAKE) -C $(KDIR) M=$(PWD) clean
