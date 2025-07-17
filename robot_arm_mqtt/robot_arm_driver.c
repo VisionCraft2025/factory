@@ -55,6 +55,9 @@ static int major_num;                     // 디바이스 파일의 메이저 �
 static char command_buffer[BUF_LEN];
 
 static bool auto_mode = false; // 자동 모드인지 -> 자동모드는 한번 실행하면 유튜브에서 봤던 것처럼 자동으로 연속적으로 동작
+static bool waiting_for_go = false; // come 동작 완료 후 go 명령을 기다리는 상태
+static bool come_mode = false; // come 명령을 실행하는 모드
+static bool go_mode = false; // go 명령을 실행하는 모드
 
 static int current_sequence = 0; // 자동 모드 시 현재 수행단계(총 4단계: 0 ~ 4)
                                  // -> ex) 0단계: 피더쪽으로 돌려서 물건 받기, 1단계: 컨베이어 벨트로 돌려서 물건 놓기, ...
@@ -146,50 +149,46 @@ static int robot_motion_thread(void *data)
     {
         if (auto_mode)
         {
-
-
+            // 기존 자동 모드 동작 (전체 시퀀스)
             // 0. servo3
             move_servo_smooth(3, 0, 1);
 
-
             // 1. servo0
             move_servo_smooth(0, 260, 1);
-            // //move_servo_smooth(0, 20, 1); //되돌아가기
 
-            // // 2. servo2
+            // 2. servo2
             move_servo_smooth(2, 120, 1);
             move_servo_smooth(2, 30, 1);
 
-            // // 3. servo1 
+            // 3. servo1 
             move_servo_smooth(1, 60, 1); //60도 ㄱㅊ
 
-            // // 4. 5초 대기
+            // 4. 5초 대기
             msleep(5000);
 
-            // // 5. servo1 
+            // 5. servo1 
             move_servo_smooth(1, 120, 1); 
 
-            // // 6. servo0
+            // 6. servo0
             move_servo_smooth(0, 20, 1); //되돌아가기
 
-            // // 7. servo1 
+            // 7. servo1 
             move_servo_smooth(1, 90, 1); //60도 ㄱㅊ
 
-            // // 8. servo2
+            // 8. servo2
             move_servo_smooth(2, 110, 1);
 
-            // // 9. servo3 상자 버리기
+            // 9. servo3 상자 버리기
             move_servo_smooth(3, 220, 1);
 
-            //  // 10. 5초 대기
+            // 10. 5초 대기
             msleep(5000);   
 
-            //  // 11. servo1 
+            // 11. servo1 
             move_servo_smooth(1, 120, 1); 
 
-            // // 12. servo2
+            // 12. servo2
             move_servo_smooth(2, 160, 1);
-
 
             // 각도 유지 강제 PWM 재전송 (헛돎 방지)
             for (int i = 0; i < NUM_SERVOS; i++) {
@@ -198,8 +197,86 @@ static int robot_motion_thread(void *data)
 
             msleep(500);
         }
+        else if (come_mode)
+        {
+            // 첫 번째 부분: come 명령 실행 (물건 집기)
+            // 0. servo3
+            move_servo_smooth(3, 0, 1);
+
+            // 1. servo0
+            move_servo_smooth(0, 260, 1);
+
+            // 2. servo2
+            move_servo_smooth(2, 120, 1);
+            move_servo_smooth(2, 30, 1);
+
+            // 3. servo1 
+            move_servo_smooth(1, 60, 1); //60도 ㄱㅊ
+           
+            // 명령 실행 후 go 명령 기다리는 모드로 전환
+            come_mode = false;
+            waiting_for_go = true; // go 명령을 기다림
+            printk(KERN_INFO "Robot Arm: COME action completed, waiting for GO command\n");
+            
+            // 각도 유지 강제 PWM 재전송 (헛돎 방지)
+            for (int i = 0; i < NUM_SERVOS; i++) {
+                set_servo_pwm(i, servos[i].current_angle);
+            }
+        }
+        else if (go_mode)
+        {
+             // 5. servo1 
+            move_servo_smooth(1, 120, 1);
+            
+
+            // 두 번째 부분: go 명령 실행 (물건 놓기)
+            // 6. servo0
+            move_servo_smooth(0, 20, 1); //되돌아가기
+
+            // 7. servo1 
+            move_servo_smooth(1, 90, 1); //60도 ㄱㅊ
+
+            // 8. servo2
+            move_servo_smooth(2, 110, 1);
+
+            // 9. servo3 상자 버리기
+            move_servo_smooth(3, 220, 1);
+
+            // 10. 5초 대기
+            msleep(5000);   
+
+            // 11. servo1 
+            move_servo_smooth(1, 120, 1); 
+
+            // 12. servo2
+            move_servo_smooth(2, 160, 1);
+
+            move_servo_smooth(3, 0, 1);
+
+            // 1. servo0
+            move_servo_smooth(0, 260, 1);
+
+            // 2. servo2
+            move_servo_smooth(2, 120, 1);
+            move_servo_smooth(2, 30, 1);
+
+            // 3. servo1 
+            move_servo_smooth(1, 60, 1); //60도 ㄱㅊ
+
+            
+            // 명령 실행 후 다시 on 명령 실행 (자동으로 come 동작 시작)
+            go_mode = false;
+            waiting_for_go = false;
+            come_mode = true; // 다시 come 동작 시작
+            printk(KERN_INFO "Robot Arm: GO action completed, automatically starting COME action again\n");
+            
+            // 각도 유지 강제 PWM 재전송 (헛돎 방지)
+            for (int i = 0; i < NUM_SERVOS; i++) {
+                set_servo_pwm(i, servos[i].current_angle);
+            }
+        }
         else
-            msleep(100); // 자동 모드가 꺼져있으면 100ms마다 확인
+            msleep(100); // 모든 모드가 꺼져있으면 100ms마다 확인
     }
     return 0;
 }
@@ -222,17 +299,27 @@ static ssize_t robot_arm_write(struct file *file, const char __user *buf, size_t
     // 명령어 처리
     if (strncmp(command_buffer, "on", 2) == 0)
     {
-        auto_mode = true;
+        // on 명령은 바로 come 동작 실행
+        auto_mode = false;
+        waiting_for_go = false;
+        come_mode = true;
+        go_mode = false;
         current_sequence = 0;
+        printk(KERN_INFO "Robot Arm: ON command - executing COME action\n");
     }
     else if (strncmp(command_buffer, "off", 3) == 0)
     {
+        // 모든 모드 비활성화
         auto_mode = false;
-          // 모든 서보모터를 중앙으로 돌려서 초기화시키기 -> 지금은 중앙을 90도로 설정함
+        waiting_for_go = false;
+        come_mode = false;
+        go_mode = false;
+        // 모든 서보모터를 중앙으로 돌려서 초기화시키기 -> 지금은 중앙을 90도로 설정함
         move_servo_smooth(3, 90, 1);
         move_servo_smooth(2, 100, 1);
         move_servo_smooth(1, 90, 1);
         move_servo_smooth(0, 0, 1);
+        printk(KERN_INFO "Robot Arm: All modes deactivated\n");
     }
     else if (strncmp(command_buffer, "init", 4) == 0)
     {
@@ -241,6 +328,27 @@ static ssize_t robot_arm_write(struct file *file, const char __user *buf, size_t
         move_servo_smooth(2, 100, 1);
         move_servo_smooth(1, 90, 1);
         move_servo_smooth(0, 90, 1); // 1
+        printk(KERN_INFO "Robot Arm: Initialized to default position\n");
+    }
+    else if (strncmp(command_buffer, "come", 4) == 0)
+    {
+        // come 명령 - 어떤 모드에서도 실행 가능
+        waiting_for_go = false;
+        come_mode = true;
+        go_mode = false;
+        printk(KERN_INFO "Robot Arm: Executing COME command\n");
+    }
+    else if (strncmp(command_buffer, "go", 2) == 0)
+    {
+        // go 명령 - waiting_for_go 모드에서만 동작
+        if (waiting_for_go) {
+            waiting_for_go = false;
+            come_mode = false;
+            go_mode = true;
+            printk(KERN_INFO "Robot Arm: Executing GO command\n");
+        } else {
+            printk(KERN_INFO "Robot Arm: GO command ignored - not waiting for GO\n");
+        }
     }
     else if (sscanf(command_buffer, "servo%d %d", &servo_id, &angle) == 2)
     {
@@ -271,8 +379,12 @@ static ssize_t robot_arm_read(struct file *file, char __user *buf, size_t len, l
         return 0;
 
     status_len = snprintf(status, sizeof(status),
-                          "자동 모드: %s\n현재 동작단계: %d\n서보모터 각도(하단/중단/상단/그리퍼): %d %d %d %d\n",
-                          auto_mode ? "ON" : "OFF", current_sequence,
+                          "자동 모드: %s\nGo 대기 모드: %s\nCome 모드: %s\nGo 모드: %s\n현재 동작단계: %d\n서보모터 각도(하단/중단/상단/그리퍼): %d %d %d %d\n",
+                          auto_mode ? "ON" : "OFF", 
+                          waiting_for_go ? "ON" : "OFF",
+                          come_mode ? "ON" : "OFF",
+                          go_mode ? "ON" : "OFF",
+                          current_sequence,
                           servos[0].current_angle, servos[1].current_angle, servos[2].current_angle, servos[3].current_angle);
 
     if (len < status_len)

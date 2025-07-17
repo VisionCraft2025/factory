@@ -56,7 +56,7 @@ void on_message(struct mosquitto *mosq, void *obj, const struct mosquitto_messag
     for (auto& c : cmd) c = std::tolower(c);
     
     // 기본 명령어들
-    if (cmd == "on" || cmd == "off" || cmd == "init") {
+    if (cmd == "on" || cmd == "off" || cmd == "init" || cmd == "come" || cmd == "go") {
         robot_arm << cmd << std::endl;
     }
     // 별칭 명령어들
