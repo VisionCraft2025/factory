@@ -1,0 +1,1 @@
+savedcmd_/home/veda/factory/conveyor_mqtt/conveyor_driver.mod := printf '%s\n'   conveyor_driver.o | awk '!x[$$0]++ { print("/home/veda/factory/conveyor_mqtt/"$$0) }' > /home/veda/factory/conveyor_mqtt/conveyor_driver.mod

@@ -75,7 +75,7 @@ static void speed_timer_callback(struct timer_list *t) {
         // 30초가 지났고, 아직 2번 감소하지 않았다면
         if (elapsed_seconds >= 30 && error_step_count < 2) {
             // 1초마다 10씩 감소 (30초, 31초에 각각 감소)
-            if (elapsed_seconds == 30 + error_step_count) {
+            if (elapsed_seconds == 30 + error_step_count) {                
                 current_speed -= 10;
                 error_step_count++;
                 printk(KERN_INFO "에러 모드: 속도 감소 %d번째 (현재 속도: %d)\n", 
