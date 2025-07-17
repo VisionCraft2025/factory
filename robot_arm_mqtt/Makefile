@@ -8,6 +8,10 @@ SRC1 = robot_arm_user.cpp
 TARGET2 = robot_arm_mqtt
 SRC2 = robot_arm_mqtt.cpp
 
+# MQTT TLS 프로그램
+TARGET3 = robot_arm_mqtt_tls
+SRC3 = robot_arm_mqtt_tls.cpp
+
 # 기존 테스트 프로그램 (참고용)
 TEST_TARGET = robot_arm_test
 TEST_SRC = robot_arm.cpp
@@ -35,13 +39,16 @@ export LD_LIBRARY_PATH := $(QT_LIBDIR):$(LD_LIBRARY_PATH)
 
 QT_FLAGS = -I$(QT_INCLUDE_DIR) -L$(QT_LIBDIR) `pkg-config --cflags --libs Qt6Mqtt Qt6Core`
 
-all: $(TARGET1) $(TARGET2) $(DRIVER_OBJ)
+all: $(TARGET1) $(TARGET2) $(TARGET3) $(DRIVER_OBJ)
 
 $(TARGET1): $(SRC1)
 	$(CXX) $(CXXFLAGS) -o $(TARGET1) $(SRC1)
 
 $(TARGET2): $(SRC2)
 	$(CXX) $(CXXFLAGS) -o $(TARGET2) $(SRC2) $(QT_FLAGS)
+
+$(TARGET3): $(SRC3)
+	$(CXX) $(CXXFLAGS) -o $(TARGET3) $(SRC3) -lmosquitto -lssl -lcrypto
 
 $(DRIVER_OBJ):
 	@echo "obj-m := robot_arm_driver.o" > Kbuild
@@ -52,7 +59,7 @@ $(TEST_TARGET): $(TEST_SRC)
 	$(CXX) $(CXXFLAGS) -o $(TEST_TARGET) $(TEST_SRC) $(LIBS)
 
 clean:
-	rm -f $(TARGET1) $(TARGET2) $(TEST_TARGET) Kbuild
+	rm -f $(TARGET1) $(TARGET2) $(TARGET3) $(TEST_TARGET) Kbuild
 	$(MAKE) -C $(KDIR) M=$(PWD) clean
 
 # 개발용 타겟들

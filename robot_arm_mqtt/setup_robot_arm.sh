@@ -4,6 +4,7 @@ DRIVER_NAME=robot_arm_driver
 DEVICE_NAME=robot_arm
 USER_APP=robot_arm_user
 MQTT_APP=robot_arm_mqtt
+MQTT_TLS_APP=robot_arm_mqtt_tls
 MAJOR_NUM=
 
 echo "=== Robot Arm MQTT Setup ==="
@@ -52,8 +53,24 @@ export LD_LIBRARY_PATH="$MQTT_LIBDIR:$LD_LIBRARY_PATH"
 echo "<서보 모터 초기화>"
 echo "init" > /dev/$DEVICE_NAME
 
-echo "유저 모드 또는 MQTT 모드 선택(1/2 입력):"
-select MODE in "USER" "MQTT"; do
+echo "인증서 파일 확인 중..."
+ls -la /certs/ca.crt /certs/robot_arm_01.crt /certs/robot_arm_01.key 2>&1 || true
+
+# 상대 경로로 다시 시도
+if [ ! -f "/certs/ca.crt" ] && [ -f "$HOME/certs/ca.crt" ]; then
+    echo "상대 경로에서 인증서 발견: $HOME/certs/"
+    export CERT_PATH="$HOME/certs"
+elif [ ! -f "/certs/ca.crt" ] && [ -f "./certs/ca.crt" ]; then
+    echo "현재 디렉토리에서 인증서 발견: ./certs/"
+    export CERT_PATH="./certs"
+else
+    export CERT_PATH="/certs"
+fi
+
+echo "사용할 인증서 경로: $CERT_PATH"
+
+echo "유저 모드 또는 MQTT 모드 선택(1/2/3 입력):"
+select MODE in "USER" "MQTT" "MQTT-TLS"; do
     case "$MODE" in
         "USER")
             echo "<유저 프로그램 실행>"
@@ -61,8 +78,19 @@ select MODE in "USER" "MQTT"; do
             break
             ;;
         "MQTT")
-            echo "<Robot Arm MQTT 실행>"
+            echo "<Robot Arm MQTT 실행 (비암호화)>"
             ./$MQTT_APP
+            break
+            ;;
+        "MQTT-TLS")
+            echo "<Robot Arm MQTT 실행 (TLS 암호화)>"
+            echo "인증서 확인: $CERT_PATH/ca.crt, $CERT_PATH/robot_arm_01.crt, $CERT_PATH/robot_arm_01.key"
+            if [ ! -f "$CERT_PATH/ca.crt" ] || [ ! -f "$CERT_PATH/robot_arm_01.crt" ] || [ ! -f "$CERT_PATH/robot_arm_01.key" ]; then
+                echo "!인증서 파일이 없습니다. TLS 연결을 위해 인증서가 필요합니다."
+                echo "인증서 경로: $CERT_PATH/ca.crt, $CERT_PATH/robot_arm_01.crt, $CERT_PATH/robot_arm_01.key"
+                exit 1
+            fi
+            CERT_PATH="$CERT_PATH" ./$MQTT_TLS_APP
             break
             ;;
         *)
