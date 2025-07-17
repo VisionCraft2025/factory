@@ -161,6 +161,9 @@ mosquitto_pub -h mqtt.kwon.pics -t "robot_arm/cmd" -m "servo0 45"
 mosquitto_pub -h mqtt.kwon.pics -t "robot_arm/cmd" -m "servo1 120"
 mosquitto_pub -h mqtt.kwon.pics -t "robot_arm/cmd" -m "servo2 180"
 mosquitto_pub -h mqtt.kwon.pics -t "robot_arm/cmd" -m "servo3 90"
+
+# 암호화 메세지
+mosquitto_pub -h mqtt.kwon.pics -p 8883 --cafile $HOME/certs/ca.crt --cert $HOME/certs/robot_arm_01.crt --key $HOME/certs/robot_arm_01.key -t "robot_arm_01/cmd" -m "on"
 ```
 
 ### 4. L298N 모터 드라이버 (conveyor_02)
