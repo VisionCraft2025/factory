@@ -4,7 +4,7 @@
 #include <unistd.h>
 
 int main() {
-    const std::string device = "/dev/feeder_01";
+    const std::string device = "/dev/feeder_02";
     std::ofstream feeder(device);
 
     if (!feeder.is_open()) {

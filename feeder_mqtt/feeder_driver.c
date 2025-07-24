@@ -13,7 +13,7 @@ MODULE_LICENSE("GPL");
 MODULE_AUTHOR("VisionCraft_min");
 MODULE_DESCRIPTION("Stepper Motor Driver for Feeder");
 
-#define DEVICE_NAME "feeder_01" //디바이스명
+#define DEVICE_NAME "feeder_02" //디바이스명
 #define BUF_LEN 16 //명령어버퍼
 #define NUM_PINS 4 //스텝모터 핀 4개임
 #define MOTOR_DELAY_US 700 // 모터 속도

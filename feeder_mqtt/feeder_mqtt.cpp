@@ -16,7 +16,7 @@ int main(int argc, char *argv[]) {
 
     QObject::connect(&client, &QMqttClient::connected, [&]() {
         qInfo("MQTT connected");
-        client.subscribe(QMqttTopicFilter("feeder_01/cmd"));  // "feeder/cmd" 토픽
+        client.subscribe(QMqttTopicFilter("feeder_02/cmd"));  // "feeder/cmd" 토픽
     });
 
     QObject::connect(&client, &QMqttClient::messageReceived,
@@ -24,10 +24,10 @@ int main(int argc, char *argv[]) {
             QString cmd = QString::fromUtf8(message).trimmed().toLower();
             qInfo() << "Received on" << topic.name() << ":" << cmd;
 
-            QFile feeder("/dev/feeder_01");
+            QFile feeder("/dev/feeder_02");
 
             if (!feeder.open(QIODevice::WriteOnly | QIODevice::Text)) {
-                qWarning("Failed to open /dev/feeder_01");
+                qWarning("Failed to open /dev/feeder_02");
                 return;
             }
 

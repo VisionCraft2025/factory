@@ -11,8 +11,9 @@
     sudo rmmod ${DRIVER_NAME} 2>/dev/null
 
     echo "<MQTT 환경변수 설정>"
-    MQTT_PKGCONFIG_DIR=$(find $HOME/tls_mqtt/qt6_local -type d -name pkgconfig | grep aarch64 | head -n 1)
+    MQTT_PKGCONFIG_DIR=$(find $HOME/dev/cpp_libs/qtmqtt -type d -name pkgconfig | grep aarch64 | head -n 1)
 
+    
     if [ -z "$MQTT_PKGCONFIG_DIR" ]; then
         echo "!MQTT 패키지 경로를 찾을 수 없습니다."
         exit 1
@@ -50,7 +51,9 @@
     # echo "./$MQTT_APP"
 
     # MQTT 실행 전 LD_LIBRARY_PATH 설정
-    MQTT_LIBDIR=$(find $HOME/tls_mqtt/qt6_local -type f -name "libQt6Mqtt.so*" | xargs dirname | head -n 1)
+    MQTT_LIBDIR=$(find $HOME/dev/cpp_libs/qtmqtt -type f -name "libQt6Mqtt.so*" | xargs dirname | head -n 1)
+    
+    
     export LD_LIBRARY_PATH="$MQTT_LIBDIR:$LD_LIBRARY_PATH"
 
     echo "유저 모드 또는 MQTT 모드 선택(1/2/3 입력):"

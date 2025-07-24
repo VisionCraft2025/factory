@@ -12,7 +12,7 @@
 // 전역 변수
 bool running = true;
 struct mosquitto *mosq = NULL;
-std::string device_id = "feeder_01"; // 기본값
+std::string device_id = "feeder_02"; // 기본값
 
 // 시그널 핸들러
 void handle_signal(int s) {
@@ -45,9 +45,9 @@ void on_message(struct mosquitto *mosq, void *obj, const struct mosquitto_messag
     std::cout << "수신 메시지: " << topic << " : " << payload << std::endl;
     
     // 명령어 처리
-    std::ofstream feeder("/dev/feeder_01");
+    std::ofstream feeder("/dev/feeder_02");
     if (!feeder.is_open()) {
-        std::cerr << "디바이스 파일 열기 실패: /dev/feeder_01" << std::endl;
+        std::cerr << "디바이스 파일 열기 실패: /dev/feeder_02" << std::endl;
         return;
     }
     
@@ -141,8 +141,8 @@ int main(int argc, char *argv[]) {
         cert_dir = env_cert_path;
     }
     
-    std::string cert_path = cert_dir + "/feeder_01.crt";
-    std::string key_path = cert_dir + "/feeder_01.key";
+    std::string cert_path = cert_dir + "/feeder_02.crt";
+    std::string key_path = cert_dir + "/feeder_02.key";
     std::string ca_path = cert_dir + "/ca.crt";
     
     std::cout << "사용할 인증서 경로:" << std::endl;

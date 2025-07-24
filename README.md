@@ -127,7 +127,7 @@ mosquitto_pub -h mqtt.kwon.pics -p 1883 -t "feeder/cmd" -m "error"
 mosquitto_pub -h mqtt.kwon.pics -p 1883 -t "feeder/cmd" -m "normal"
 
 # 암호화 메세지 보내기
-mosquitto_pub -h mqtt.kwon.pics -p 8883 --cafile $HOME/certs/ca.crt --cert $HOME/certs/feeder_01.crt --key $HOME/certs/feeder_01.key -t "feeder_01/cmd" -m "on"
+mosquitto_pub -h mqtt.kwon.pics -p 8883 --cafile $HOME/certs/ca.crt --cert $HOME/certs/feeder_02.crt --key $HOME/certs/feeder_02.key -t "feeder_02/cmd" -m "on"
 
 ```
 
