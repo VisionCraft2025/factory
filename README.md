@@ -6,7 +6,7 @@
 
 ```
 factory/
-├── conveyor01_mqtt/        # 컨베이어01 제어 시스템(재활용 불가한 병 탐지)
+├── conveyor01_nonstop_ver3/        # 컨베이어01 제어 시스템(재활용 불가한 병 탐지)
 ├── feeder_mqtt/           # 피더 제어 시스템  
 ├── robot_arm_mqtt/        # 4축 로봇암 제어 시스템
 └── conveyor_02/           # 컨베이어02(직선) 제어 시스템
@@ -14,39 +14,39 @@ factory/
 
 ## 하드웨어 연결
 
-### 컨베이어 시스템 (conveyor01_mqtt)
-| 컴포넌트 | GPIO 핀 | BCM 번호 | 설명 |
+### 컨베이어 시스템 (conveyor01_nonstop_ver3)
+| 컴포넌트 | 물리적 핀 | BCM 번호 | 설명 |
 |----------|---------|----------|------|
-| 스테퍼 모터 STEP | GPIO 17 | BCM 17 | 스텝 펄스 신호 |
-| 스테퍼 모터 DIR | GPIO 27 | BCM 27 | 방향 제어 |
-| 스테퍼 모터 ENABLE | GPIO 22 | BCM 22 | 모터 활성화 |
-| 서보 모터 PWM | GPIO 5 | BCM 5 | 서보 각도 제어 |
+| 스테퍼 모터 STEP | 핀 11 | BCM 17 | 스텝 펄스 신호 |
+| 스테퍼 모터 DIR | 핀 13 | BCM 27 | 방향 제어 |
+| 스테퍼 모터 ENABLE | 핀 15 | BCM 22 | 모터 활성화 |
+| 서보 모터 PWM | 핀 29 | BCM 5 | 서보 각도 제어 |
 
 ### 피더 시스템 (feeder_mqtt)
-| 컴포넌트 | GPIO 핀 | BCM 번호 | 설명 |
+| 컴포넌트 | 물리적 핀 | BCM 번호 | 설명 |
 |----------|---------|----------|------|
-| 모터 제어 1 | GPIO 5 | BCM 5 | 모터 제어 핀 1 |
-| 모터 제어 2 | GPIO 6 | BCM 6 | 모터 제어 핀 2 |
-| 모터 제어 3 | GPIO 13 | BCM 13 | 모터 제어 핀 3 |
-| 모터 제어 4 | GPIO 19 | BCM 19 | 모터 제어 핀 4 |
+| 모터 제어 1 | 핀 35 | BCM 19 | 모터 제어 핀 1 |
+| 모터 제어 2 | 핀 33 | BCM 13 | 모터 제어 핀 2 |
+| 모터 제어 3 | 핀 31 | BCM 6 | 모터 제어 핀 3 |
+| 모터 제어 4 | 핀 29 | BCM 5 | 모터 제어 핀 4 |
 
 ### 로봇팔 시스템 (robot_arm_mqtt)
-| 서보모터 | GPIO 핀 | BCM 번호 | 기능 |
+| 서보모터 | 물리적 핀 | BCM 번호 | 기능 |
 |---------|---------|----------|------|
-| servo0 | GPIO 22 | BCM 22 | 하단 모터 (베이스) |
-| servo1 | GPIO 24 | BCM 24 | 중단 모터 |
-| servo2 | GPIO 25 | BCM 25 | 상단 모터 |
-| servo3 | GPIO 8 | BCM 8 | 엔드 모터 (그리퍼) |
+| servo0 | 핀 15 | BCM 22 | 하단 모터 (베이스) |
+| servo1 | 핀 18 | BCM 24 | 중단 모터 |
+| servo2 | 핀 22 | BCM 25 | 상단 모터 |
+| servo3 | 핀 24 | BCM 8 | 엔드 모터 (그리퍼) |
 
 ### 컨베이어02 시스템 (conveyor_02)
-| 컴포넌트 | GPIO 핀 | BCM 번호 | 설명 |
+| 컴포넌트 | 물리적 핀 | BCM 번호 | 설명 |
 |----------|---------|----------|------|
-| 모터A IN1 | GPIO 23 | BCM 23 | 모터A 방향 제어 1 |
-| 모터A IN2 | GPIO 24 | BCM 24 | 모터A 방향 제어 2 |
-| 모터B IN3 | GPIO 25 | BCM 25 | 모터B 방향 제어 1 |
-| 모터B IN4 | GPIO 8 | BCM 8 | 모터B 방향 제어 2 |
-| 모터A ENA | GPIO 18 | BCM 18 | 모터A PWM 속도 제어 |
-| 모터B ENB | GPIO 7 | BCM 7 | 모터B PWM 속도 제어 |
+| 모터A IN1 | 핀 16 | BCM 23 | 모터A 방향 제어 1 |
+| 모터A IN2 | 핀 18 | BCM 24 | 모터A 방향 제어 2 |
+| 모터B IN3 | 핀 22 | BCM 25 | 모터B 방향 제어 1 |
+| 모터B IN4 | 핀 24 | BCM 8 | 모터B 방향 제어 2 |
+| 모터A ENA | 핀 12 | BCM 18 | 모터A PWM 속도 제어 |
+| 모터B ENB | 핀 26 | BCM 7 | 모터B PWM 속도 제어 |
 
 ## 설치 및 실행
 
@@ -65,7 +65,7 @@ cd qtmqtt && mkdir build && cd build
 cmake .. && make -j$(nproc)
 ```
 
-### 1. 컨베이어 시스템 (conveyor01_mqtt)
+### 1. 컨베이어 시스템 (conveyor01_nonstop_ver3)
 
 #### 실행 방법
 ```bash
@@ -92,13 +92,16 @@ make install
 #### MQTT 명령어
 ```bash
 # 컨베이어 시작
-mosquitto_pub -h mqtt.kwon.pics -t "conveyor_01/cmd" -m "on"
+mosquitto_pub -h mqtt.kwon.pics -t "conveyor_03/cmd" -m "on"
 
 # 에러 모드 (30초 후 속도 감소)
-mosquitto_pub -h mqtt.kwon.pics -t "conveyor_01/cmd" -m "error_mode"
+mosquitto_pub -h mqtt.kwon.pics -t "conveyor_03/cmd" -m "error_mode"
 
 # 컨베이어 정지
-mosquitto_pub -h mqtt.kwon.pics -t "conveyor_01/cmd" -m "off"
+mosquitto_pub -h mqtt.kwon.pics -t "conveyor_03/cmd" -m "off"
+
+# 암호화 메세지 보내기
+mosquitto_pub -h mqtt.kwon.pics -p 8883 --cafile $HOME/certs/ca.crt --cert $HOME/certs/conveyor_03.crt --key $HOME/certs/conveyor_03.key -t "conveyor_03/cmd" -m "on"
 ```
 
 ### 2. 피더 시스템 (feeder_mqtt)
@@ -112,19 +115,19 @@ sudo ./setup_feeder.sh
 #### MQTT 명령어
 ```bash
 # 정방향 회전
-mosquitto_pub -h mqtt.kwon.pics -p 1883 -t "feeder/cmd" -m "on"
+mosquitto_pub -h mqtt.kwon.pics -p 1883 -t "feeder_02/cmd" -m "on"
 
 # 역방향 회전
-mosquitto_pub -h mqtt.kwon.pics -p 1883 -t "feeder/cmd" -m "reverse"
+mosquitto_pub -h mqtt.kwon.pics -p 1883 -t "feeder_02/cmd" -m "reverse"
 
 # 정지
-mosquitto_pub -h mqtt.kwon.pics -p 1883 -t "feeder/cmd" -m "off"
+mosquitto_pub -h mqtt.kwon.pics -p 1883 -t "feeder_02/cmd" -m "off"
 
 # 에러 모드
-mosquitto_pub -h mqtt.kwon.pics -p 1883 -t "feeder/cmd" -m "error"
+mosquitto_pub -h mqtt.kwon.pics -p 1883 -t "feeder_02/cmd" -m "error"
 
 # 정상 속도 복귀
-mosquitto_pub -h mqtt.kwon.pics -p 1883 -t "feeder/cmd" -m "normal"
+mosquitto_pub -h mqtt.kwon.pics -p 1883 -t "feeder_02/cmd" -m "normal"
 
 # 암호화 메세지 보내기
 mosquitto_pub -h mqtt.kwon.pics -p 8883 --cafile $HOME/certs/ca.crt --cert $HOME/certs/feeder_02.crt --key $HOME/certs/feeder_02.key -t "feeder_02/cmd" -m "on"
@@ -152,15 +155,15 @@ sudo ./setup_robot_arm.sh
 #### MQTT 명령어
 ```bash
 # 시스템 제어
-mosquitto_pub -h mqtt.kwon.pics -t "robot_arm/cmd" -m "init"      # 초기화
-mosquitto_pub -h mqtt.kwon.pics -t "robot_arm/cmd" -m "on"   # 자동 시작
-mosquitto_pub -h mqtt.kwon.pics -t "robot_arm/cmd" -m "off"  # 자동 중지
+mosquitto_pub -h mqtt.kwon.pics -t "robot_arm_01/cmd" -m "init"      # 초기화
+mosquitto_pub -h mqtt.kwon.pics -t "robot_arm_01/cmd" -m "on"   # 자동 시작
+mosquitto_pub -h mqtt.kwon.pics -t "robot_arm_01/cmd" -m "off"  # 자동 중지
 
 # 수동 제어 (0-250도)
-mosquitto_pub -h mqtt.kwon.pics -t "robot_arm/cmd" -m "servo0 45"
-mosquitto_pub -h mqtt.kwon.pics -t "robot_arm/cmd" -m "servo1 120"
-mosquitto_pub -h mqtt.kwon.pics -t "robot_arm/cmd" -m "servo2 180"
-mosquitto_pub -h mqtt.kwon.pics -t "robot_arm/cmd" -m "servo3 90"
+mosquitto_pub -h mqtt.kwon.pics -t "robot_arm_01/cmd" -m "servo0 45"
+mosquitto_pub -h mqtt.kwon.pics -t "robot_arm_01/cmd" -m "servo1 120"
+mosquitto_pub -h mqtt.kwon.pics -t "robot_arm_01/cmd" -m "servo2 180"
+mosquitto_pub -h mqtt.kwon.pics -t "robot_arm_01/cmd" -m "servo3 90"
 
 # 암호화 메세지
 mosquitto_pub -h mqtt.kwon.pics -p 8883 --cafile $HOME/certs/ca.crt --cert $HOME/certs/robot_arm_01.crt --key $HOME/certs/robot_arm_01.key -t "robot_arm_01/cmd" -m "on"
@@ -235,10 +238,10 @@ mosquitto_pub -h mqtt.kwon.pics -p 8883 --cafile ca.crt -t "conveyor02/cmd" -m "
 - **인증**: TLS 인증서 필요 (일부 시스템)
 
 ### 토픽 구조
-- `factory/conveyor_01/cmd`: 컨베이어 제어
-- `factory/feeder/cmd`: 피더 제어
-- `factory/robot_arm/cmd`: 로봇암 제어
-- `factory/conveyor02/cmd`: L298N 모터 제어
+- `factory/conveyor_03/cmd`: 컨베이어 제어
+- `factory/feeder_02/cmd`: 피더 제어
+- `factory/robot_arm_01/cmd`: 로봇암 제어
+- `factory/conveyor_02/cmd`: L298N 모터 제어
 
 ## 문제 해결
 
@@ -299,8 +302,8 @@ mosquitto_tls_set(
     client,                // MQTT 클라이언트 인스턴스
     "./certs/ca.crt",     // CA 인증서 경로
     NULL,                 // CA 디렉토리 경로 (NULL=사용하지 않음)
-    "./certs/conveyor_02.crt", // 클라이언트 인증서
-    "./certs/conveyor_02.key", // 클라이언트 개인키
+    "./certs/conveyor_03.crt", // 클라이언트 인증서
+    "./certs/conveyor_03.key", // 클라이언트 개인키
     NULL                  // 개인키 비밀번호 (NULL=비밀번호 없음)
 );
 
@@ -344,3 +347,32 @@ sudo cat /sys/kernel/debug/gpio
 # 디바이스 파일 상태 확인
 ls -la /dev/ | grep -E "(conveyor|feeder|robot_arm|l298n)"
 ```
+
+## 라즈베리파이 핀 배치도
+
+라즈베리파이의 물리적 핀 번호와 BCM 번호는 다음과 같이 매핑됩니다:
+
+```
+   3.3V [1]  [2]  5V
+BCM  2  [3]  [4]  5V
+BCM  3  [5]  [6]  GND
+BCM  4  [7]  [8]  BCM 14
+   GND [9]  [10] BCM 15
+BCM 17 [11] [12] BCM 18
+BCM 27 [13] [14] GND
+BCM 22 [15] [16] BCM 23
+  3.3V [17] [18] BCM 24
+BCM 10 [19] [20] GND
+BCM  9 [21] [22] BCM 25
+BCM 11 [23] [24] BCM 8
+   GND [25] [26] BCM 7
+BCM  0 [27] [28] BCM 1
+BCM  5 [29] [30] GND
+BCM  6 [31] [32] BCM 12
+BCM 13 [33] [34] GND
+BCM 19 [35] [36] BCM 16
+BCM 26 [37] [38] BCM 20
+   GND [39] [40] BCM 21
+```
+
+이 핀 배치도를 참고하여 하드웨어를 연결하세요.
