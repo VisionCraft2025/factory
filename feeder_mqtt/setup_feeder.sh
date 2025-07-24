@@ -1,7 +1,7 @@
     #!/bin/bash
 
     DRIVER_NAME=feeder_driver
-    DEVICE_NAME=feeder
+    DEVICE_NAME=feeder_02
     USER_APP=feeder_user
     MQTT_APP=feeder_mqtt
     MQTT_TLS_APP=feeder_mqtt_tls
@@ -71,9 +71,9 @@
                 ;;
             "MQTT-TLS")
                 echo "<MQTT 피더 실행 (TLS 암호화)>"
-                echo "인증서 확인: /certs/ca.crt, /certs/feeder_01.crt, /certs/feeder_01.key"
+                echo "인증서 확인: /certs/ca.crt, /certs/feeder_02.crt, /certs/feeder_02.key"
                 echo "인증서 파일 확인 중..."
-                ls -la /certs/ca.crt /certs/feeder_01.crt /certs/feeder_01.key 2>&1 || true
+                ls -la /certs/ca.crt /certs/feeder_02.crt /certs/feeder_02.key 2>&1 || true
                 
                 # 상대 경로로 다시 시도
                 if [ ! -f "/certs/ca.crt" ] && [ -f "$HOME/certs/ca.crt" ]; then
@@ -88,9 +88,9 @@
                 
                 echo "사용할 인증서 경로: $CERT_PATH"
                 
-                if [ ! -f "$CERT_PATH/ca.crt" ] || [ ! -f "$CERT_PATH/feeder_01.crt" ] || [ ! -f "$CERT_PATH/feeder_01.key" ]; then
+                if [ ! -f "$CERT_PATH/ca.crt" ] || [ ! -f "$CERT_PATH/feeder_02.crt" ] || [ ! -f "$CERT_PATH/feeder_02.key" ]; then
                     echo "!인증서 파일이 없습니다. TLS 연결을 위해 인증서가 필요합니다."
-                    echo "인증서 경로: $CERT_PATH/ca.crt, $CERT_PATH/feeder_01.crt, $CERT_PATH/feeder_01.key"
+                    echo "인증서 경로: $CERT_PATH/ca.crt, $CERT_PATH/feeder_02.crt, $CERT_PATH/feeder_02.key"
                     exit 1
                 fi
                 
